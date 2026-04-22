@@ -179,14 +179,10 @@ export default function DailyBriefs() {
     const iv = setInterval(() => { mi++; if (mi < msgs.length) setLoadingMsg(msgs[mi]); }, 2200);
     const { prompt, tokens } = buildPrompt(p, length);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/brief", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: tokens,
-          messages: [{ role: "user", content: prompt }]
-        })
+        body: JSON.stringify({ prompt, max_tokens: tokens })
       });
       const data = await res.json();
       const text = data.content?.find(b => b.type === "text")?.text || "";
